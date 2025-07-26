@@ -53,4 +53,7 @@ graph TD
 
 ## How To Run
 ## LICENSE
+This project uses the [MIT License](./LICENSE)
+
 ## Contributures
+- [Uplink036](https://github.com/Uplink036)
