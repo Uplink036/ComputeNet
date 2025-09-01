@@ -3,7 +3,7 @@
 This project is a supposed to be showcase a distributed computing platform that enables users to donate their idle CPU power to collectively solve computational problems. By connecting a network of volunteer clients with a system that distributes workloads and aggregates results.
 
 ### File Layout 
-'''
+``` File Structure
 ComputeNet/
 ├── backend/
 │   ├── app.js
@@ -20,11 +20,11 @@ ComputeNet/
 │   └── Dockerfile
 ├── docker-compose.yml
 └── README.md
-'''
+```
 
 ### Architechutre
 
-''' Mermaid
+``` Mermaid
 graph TD
     subgraph Frontend
         FE[Pure JavaScript UI]
@@ -49,7 +49,21 @@ graph TD
 
     API --> Queue
     Queue --> API
-'''
+```
+
+### Database
+#### Tasks
+|field | type | 
+| --- | --- |
+|number | int|
+|chainLength | int| 
+|byUser | GUID |
+
+#### Users
+|field | type | 
+| --- | --- |
+| currentTask | GUID|
+
 
 ## How To Run
 ## LICENSE
