@@ -5,7 +5,7 @@ This project is a supposed to be showcase a distributed computing platform that 
 ### File Layout 
 ``` File Structure
 ComputeNet/
-├── backend/
+├── controller/
 │   ├── app.js
 │   ├── routes/
 │   ├── controllers/
@@ -13,10 +13,6 @@ ComputeNet/
 │   └── Dockerfile
 ├── client/
 │   ├── agent.js
-│   └── Dockerfile
-├── frontend/
-│   ├── index.html
-│   ├── script.js
 │   └── Dockerfile
 ├── docker-compose.yml
 └── README.md
@@ -36,19 +32,11 @@ graph TD
         C3[Client Agent N<br/>Submits Result]
     end
 
-    subgraph Backend (Node.js API)
-        API[Node.js REST API<br/>(Express or Fastify)]
-        Queue[MongoDB Task Queue<br/>(tasks, results)]
-    end
-
-    FE -- Submit/View Tasks --> API
-    C1 -- GET /task --> API
+    FE -- Submit/View Tasks --> BACKEND
+    C1 -- GET /task --> FE
     C2 -- Process Task --> C2
-    C2 -- POST /result --> API
-    C3 -- Repeats loop --> API
-
-    API --> Queue
-    Queue --> API
+    C2 -- POST /result --> FE
+    C3 -- Repeats loop --> FE
 ```
 
 ### Database
