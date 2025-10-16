@@ -38,4 +38,19 @@ describe('ComputeNet API', () => {
     const response2 = await request(app).get('/api/task');
     expect(response2.body).toEqual({ task: 2 });
   });
+
+
+  test('POST /api/task/submit sumbit a task', async () => {
+    const response0 = await request(app).post('/api/task/submit').send({});
+    expect(response0.body).toEqual({ success: false });
+
+    const response1 = await request(app).post('/api/task/submit').send({task: 1, result: 1});
+    expect(response1.body).toEqual({ success: true });
+
+    const response2 = await request(app).post('/api/task/submit').send({task: 2, result: 1});
+    expect(response2.body).toEqual({ success: true });
+
+    const response3 = await request(app).post('/api/task/submit').send({task: 3, result: 7});
+    expect(response3.body).toEqual({ success: true });
+  });
 });

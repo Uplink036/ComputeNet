@@ -19,6 +19,7 @@ html
         h3 Submit Task
         input#number(type="number" placeholder="Number")
         input#chainLength(type="number" placeholder="Chain Length")
+        button#submitTask Submit 
       #tasks
         h3 Tasks
         #taskList
@@ -28,5 +29,17 @@ html
         const response = await fetch('/api/task');
         const data = await response.json();
         document.getElementById('taskDisplay').textContent = `Task: ${data.task}`;
+      });
+
+      document.getElementById('submitTask').addEventListener('click', async () => {
+        const task = parseInt(document.getElementById("number").value)
+        const result = parseInt(document.getElementById("chainLength").value)
+        const request = {
+          method: "POST", 
+          headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({task, result})
+        }
+        const response = await fetch('/api/task/submit', request);
+        const data = await response.json();
       });
 
