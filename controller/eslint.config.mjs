@@ -20,6 +20,12 @@ export default defineConfig([
       curly: "error",
     },
   },
+  {
+    files: ["**/*.test.js"],
+    languageOptions: {
+      globals: { ...globals.jest },
+    },
+  },
   { files: ["**/*.js"], languageOptions: { sourceType: "commonjs" } },
   {
     files: ["**/*.json"],
