@@ -58,7 +58,7 @@ app.get('/', (req, res) => {
 app.get('/api/task', async (req, res) => {
   console.log('GET /api/task - fetching a task');
   try {
-    if (!db) return res.json({ task: null });
+    if (!db) {return res.json({ task: null });}
     
     console.log("Fetching from database");
     const claimedTask = await claimNextTask();
@@ -73,8 +73,6 @@ app.get('/api/task', async (req, res) => {
       console.log("No pending tasks, creating first task");
       await createTask(1, 'taken');
       await createTask(2);
-      console.log("Created initial tasks 1 (taken) and 2 (pending)");
-      
       res.json({ task: 1 });
     }
   } catch (error) {
