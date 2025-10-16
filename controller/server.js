@@ -84,6 +84,26 @@ app.get("/api/task", async (req, res) => {
 });
 
 
+app.get("/api/results", async (req, res) => {
+  try {
+    if (!db) {
+      return res.json({ results: [] });
+    }
+    
+    const results = await db
+      .collection("results")
+      .find({})
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .toArray();
+    
+    res.json({ results });
+  } catch (error) {
+    console.log("Error fetching results:", error.message);
+    res.json({ results: [] });
+  }
+});
+
 app.post("/api/task/submit", async (req, res) => {
   console.log("GET /api/task/submit - submit the results of a task");
   console.log("Client IP", req.ip)

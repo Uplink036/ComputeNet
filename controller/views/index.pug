@@ -21,7 +21,8 @@ html
         input#chainLength(type="number" placeholder="Chain Length")
         button#submitTask Submit 
       #tasks
-        h3 Tasks
+        h3 Last 5 Completed Tasks
+        button#fetchResults Fetch Results
         #taskList
 
     script.
@@ -42,4 +43,22 @@ html
         const response = await fetch('/api/task/submit', request);
         const data = await response.json();
       });
+      
+      document.getElementById('fetchResults').addEventListener('click', async () => {
+        const response = await fetch('/api/results');
+        const data = await response.json();
+        const list = document.getElementById('taskList');
+        list.innerHTML = data.results.map(r => 
+          `<p>Task ${r.task}: Result ${r.result} (${new Date(r.createdAt).toLocaleString()})</p>`
+        ).join('');
+      });
+      
+      setInterval(async () => {
+        const response = await fetch('/api/results');
+        const data = await response.json();
+        const list = document.getElementById('taskList');
+        list.innerHTML = data.results.map(r => 
+          `<p>Task ${r.task}: Result ${r.result} (${new Date(r.createdAt).toLocaleString()})</p>`
+        ).join('');
+      }, 2000);
 
