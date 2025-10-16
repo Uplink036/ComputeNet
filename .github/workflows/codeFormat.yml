@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  eslint:
+  linter:
     runs-on: ubuntu-latest
     
     steps:
@@ -24,4 +24,9 @@ jobs:
     - name: Run ESLint
       run: |
         cd controller
-        npx eslint .
+        npm run lint
+
+    - name: Run prettier
+      run: |
+        cd controller
+        npm run format:check
