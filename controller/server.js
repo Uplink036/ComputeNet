@@ -83,20 +83,19 @@ app.get("/api/task", async (req, res) => {
   }
 });
 
-
 app.get("/api/results", async (req, res) => {
   try {
     if (!db) {
       return res.json({ results: [] });
     }
-    
+
     const results = await db
       .collection("results")
       .find({})
       .sort({ createdAt: -1 })
       .limit(5)
       .toArray();
-    
+
     res.json({ results });
   } catch (error) {
     console.log("Error fetching results:", error.message);
@@ -106,9 +105,13 @@ app.get("/api/results", async (req, res) => {
 
 app.post("/api/task/submit", async (req, res) => {
   console.log("GET /api/task/submit - submit the results of a task");
-  console.log("Client IP", req.ip)
+  console.log("Client IP", req.ip);
   try {
-    if (!db || !(typeof req.body.task !== 'undefined') || !(typeof req.body.result !== 'undefined')) {
+    if (
+      !db ||
+      !(typeof req.body.task !== "undefined") ||
+      !(typeof req.body.result !== "undefined")
+    ) {
       return res.json({ success: false });
     }
     console.log(req);
@@ -117,15 +120,14 @@ app.post("/api/task/submit", async (req, res) => {
       result: req.body.result,
       createdAt: new Date(),
       client: req.ip,
-    }
-    db.collection("results").insertOne(result)
-    res.json({success: true});
+    };
+    db.collection("results").insertOne(result);
+    res.json({ success: true });
   } catch (error) {
     console.log("Error when trying to fetch from database:", error.message);
     res.json({ success: false });
   }
 });
-
 
 const server = app.listen(port, () => {
   console.log(`ComputeNet frontend running on port ${port}`);
