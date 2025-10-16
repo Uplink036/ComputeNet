@@ -12,6 +12,5 @@ services:
       - "5000:5000"
     volumes:
       - ./controller:/app
-      - type: tmpfs
-        target: /app/node_modules/
+      - /app/node_modules
 
