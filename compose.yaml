@@ -15,3 +15,8 @@ services:
     volumes:
       - ./controller:/app
       - /app/node_modules
+  
+  worker:
+    build: ./worker
+    depends_on:
+      - controller
