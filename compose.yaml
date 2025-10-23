@@ -1,9 +1,9 @@
 services:
   database:
     image: mongo
-    command: mongod --quiet
+    command: mongod --quiet --port 30017
     ports:
-      - "27017:27017"
+      - "30017:30017"
 
   controller:
     build: ./controller
@@ -15,6 +15,9 @@ services:
     volumes:
       - ./controller:/app
       - /app/node_modules
+    environment:
+      - DATABASE_URL=mongodb://database:30017
+      - FRONTEND_PORT=3000
   
   worker:
     build: ./worker

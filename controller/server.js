@@ -1,12 +1,20 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const app = express();
-const port = 3000;
+
+let port = 3000;
+if (process.env.FRONTEND_PORT !== "undefined")
+  {port = process.env.FRONTEND_PORT;}
+
+let database_url = "mongodb://database:27017";
+if (process.env.DATABASE_URL !== "undefined")
+  {database_url = process.env.DATABASE_URL;}
+
 
 let db;
 
 console.log("Attempting to connect to MongoDB at database:27017...");
-MongoClient.connect("mongodb://database:27017")
+MongoClient.connect(database_url)
   .then((client) => {
     db = client.db("computenet");
     console.log("Connected to MongoDB successfully");
@@ -62,6 +70,7 @@ app.get("/api/task", async (req, res) => {
     if (!db) {
       return res.json({ task: null });
     }
+    console.log(res.ip)
 
     console.log("Fetching from database");
     const claimedTask = await claimNextTask();
