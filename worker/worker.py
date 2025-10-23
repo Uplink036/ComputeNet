@@ -3,38 +3,57 @@ import time
 import os
 import sys
 
+DEBUG = bool(os.getenv("DEBUG", 0))
+assert DEBUG in (True, False)
 CONTROLLER_URL = os.getenv("CONTROLLER_URL", "http://localhost:3000")
-TIME_BETWEEN_TASKS = int(os.getenv("TIME_BETWEEN_TASKS", "5"))
+assert isinstance(CONTROLLER_URL, str)
+TIME_BETWEEN_TASKS = float(os.getenv("TIME_BETWEEN_TASKS", "5"))
+assert isinstance(TIME_BETWEEN_TASKS, float)
 TIME_FOR_ERRORS = 2*TIME_BETWEEN_TASKS
 
+def debug_print(message):
+    if DEBUG:
+        print(f"[DEBUG] {message}")
+
 def get_task():
+    debug_print("Entering get_task()")
     response = requests.get(f"{CONTROLLER_URL}/api/task")
-    return response.json().get("task")
+    task = response.json().get("task")
+    debug_print(f"Exiting get_task() with task: {task}")
+    return task
 
 def submit_result(task, result):
+    debug_print(f"Entering submit_result() with task: {task}, result: {result}")
     data = {"task": task, "result": result}
     response = requests.post(f"{CONTROLLER_URL}/api/task/submit", json=data)
-    return response.json().get("success")
+    success = response.json().get("success")
+    debug_print(f"Exiting submit_result() with success: {success}")
+    return success
 
 def collatz_odd(num):
-    return 3*num + 1
+    result = 3*num + 1
+    return result
 
-def collats_even(num):
-    return num/2
+def collatz_even(num):
+    result = num//2
+    return result
 
 def process_task(task):
+    debug_print(f"Entering process_task() with task: {task}")
     current_num = task
     sequence = []
     while current_num != 1:
         if current_num % 2 == 0:
-            current_num = collats_even(current_num)
+            current_num = collatz_even(current_num)
         else:
             current_num = collatz_odd(current_num)
         sequence.append(current_num)
-    return len(sequence)
-
+    result = len(sequence)
+    debug_print(f"Exiting process_task() with result: {result}")
+    return result
 
 def main():
+    debug_print("Entering main()")
     while True:
         try:
             task = get_task()
