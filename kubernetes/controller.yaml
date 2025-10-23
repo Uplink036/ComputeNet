@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: controller-service
+  labels:
+    app: controller
+spec:
+  type: LoadBalancer
+  ports:
+  - name: http
+    port: 80
+    nodePort: 3000
+    protocol: TCP
+  - name: API
+    port: 5000
+    nodePort: 5000 #targetport?
+    protocol: TCP
+  selector:
+    app: controller
+  
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-Deployment
+  labels:
+    app: controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: controller
+  template:
+    metadata:
+      labels:
+        app: controller
+  containers:
+  - name: controller
+    image: controller
+    ports:
+    - containerPort: 80
+      protocol: TCP
+    - containerPort: 5000
+      protocol: TCP
+---
