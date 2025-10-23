@@ -2,6 +2,7 @@ import requests
 import time
 import os
 import sys
+import signal 
 
 DEBUG = bool(os.getenv("DEBUG", 0))
 assert DEBUG in (True, False)
@@ -10,6 +11,7 @@ assert isinstance(CONTROLLER_URL, str)
 TIME_BETWEEN_TASKS = float(os.getenv("TIME_BETWEEN_TASKS", "5"))
 assert isinstance(TIME_BETWEEN_TASKS, float)
 TIME_FOR_ERRORS = 2*TIME_BETWEEN_TASKS
+
 
 def debug_print(message):
     if DEBUG:
@@ -54,6 +56,12 @@ def process_task(task):
 
 def main():
     debug_print("Entering main()")
+    stop = False
+    def exit_gracefully():
+        global stop
+        stop = True
+    signal.signal(signal.SIGTERM, exit_gracefully)
+
     while True:
         try:
             task = get_task()
@@ -65,9 +73,37 @@ def main():
             else:
                 print("No task available")
             time.sleep(TIME_BETWEEN_TASKS)
+            if stop:
+                break 
         except Exception as e:
             print(f"Error: {e}")
             time.sleep(TIME_FOR_ERRORS)
 
-if __name__ == "__main__":
-    main()
+
+# API server
+
+from fastapi import FastAPI 
+from multiprocessing import Process
+from contextlib import asynccontextmanager
+
+process = None
+
+@asynccontextmanager
+async def startup_event(app):
+    print("Starting")
+    global process
+    process = Process(target=main)
+    process.start()
+    yield
+    process.terminate()
+    print("Stoping")
+
+app = FastAPI(lifespan=startup_event)
+
+@app.get("/")
+def root():
+    global process
+    if process.is_alive():
+        return {"health": True}
+    else:
+        sys.exit(1)

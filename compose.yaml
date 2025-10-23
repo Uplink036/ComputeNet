@@ -20,6 +20,10 @@ services:
     build: ./worker
     depends_on:
       - controller
+    ports:
+      - "11111:11111"
     environment:
       - CONTROLLER_URL=http://controller:3000
       - TIME_BETWEEN_TASKS=1
+      - PORT=11111
+      - DEBUG=0
