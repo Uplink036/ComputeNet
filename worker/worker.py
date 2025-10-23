@@ -27,10 +27,18 @@ def get_task():
 def submit_result(task, result):
     debug_print(f"Entering submit_result() with task: {task}, result: {result}")
     data = {"task": task, "result": result}
-    response = requests.post(f"{CONTROLLER_URL}/api/task/submit", json=data)
-    success = response.json().get("success")
+    successful = False
+    tries = 0
+    while not successful:
+        response = requests.post(f"{CONTROLLER_URL}/api/task/submit", json=data)
+        successful = response.json().get("success")
+        if not successful:
+            time.sleep(TIME_FOR_ERRORS)
+            tries += 1
+            if tries > 3:
+                break
     debug_print(f"Exiting submit_result() with success: {success}")
-    return success
+    return successful
 
 def collatz_odd(num):
     result = 3*num + 1
