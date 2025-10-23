@@ -1,7 +1,11 @@
 import requests
 import time
+import os
+import sys
 
-CONTROLLER_URL = "http://controller:3000"
+CONTROLLER_URL = os.getenv("CONTROLLER_URL", "http://localhost:3000")
+TIME_BETWEEN_TASKS = int(os.getenv("TIME_BETWEEN_TASKS", "5"))
+TIME_FOR_ERRORS = 2*TIME_BETWEEN_TASKS
 
 def get_task():
     response = requests.get(f"{CONTROLLER_URL}/api/task")
@@ -41,10 +45,10 @@ def main():
                 print(f"Submitted result {result}: {'success' if success else 'failed'}")
             else:
                 print("No task available")
-            time.sleep(5)
+            time.sleep(TIME_BETWEEN_TASKS)
         except Exception as e:
             print(f"Error: {e}")
-            time.sleep(10)
+            time.sleep(TIME_FOR_ERRORS)
 
 if __name__ == "__main__":
     main()

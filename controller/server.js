@@ -84,6 +84,7 @@ app.get("/api/task", async (req, res) => {
 });
 
 app.get("/api/results", async (req, res) => {
+  console.log("GET /api/results - fetch the last 5 results");
   try {
     if (!db) {
       return res.json({ results: [] });
@@ -104,8 +105,7 @@ app.get("/api/results", async (req, res) => {
 });
 
 app.post("/api/task/submit", async (req, res) => {
-  console.log("GET /api/task/submit - submit the results of a task");
-  console.log("Client IP", req.ip);
+  console.log("POST /api/task/submit - submit the results of a task");
   try {
     if (
       !db ||
@@ -114,7 +114,7 @@ app.post("/api/task/submit", async (req, res) => {
     ) {
       return res.json({ success: false });
     }
-    console.log(req);
+    console.log("Task", req.body.task, "submitted with result", req.body.result);
     const result = {
       task: req.body.task,
       result: req.body.result,
