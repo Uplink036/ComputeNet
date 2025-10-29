@@ -7,18 +7,34 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - name: API
+  - name: api
     port: 27017
-    nodePort: 27017
+    targetPort: 27017
     protocol: TCP
   selector:
     app: database
-  
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: database-ingress
+spec:
+  rules:
+  - host: database.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: database-service
+            port:
+              number: 27017
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: database-Deployment
+  name: database-deployment
   labels:
     app: database
 spec:
@@ -30,10 +46,11 @@ spec:
     metadata:
       labels:
         app: database
-  containers:
-  - name: database
-    image: mongo
-    ports:
-    - containerPort: 27017
-      protocol: TCP
+    spec:
+      containers:
+      - name: database
+        image: mongo
+        ports:
+        - containerPort: 27017
+          protocol: TCP
 ---

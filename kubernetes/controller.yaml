@@ -9,20 +9,43 @@ spec:
   ports:
   - name: http
     port: 80
-    nodePort: 3000
+    targetPort: 3000
     protocol: TCP
-  - name: API
+  - name: api
     port: 5000
-    nodePort: 5000 #targetport?
+    targetPort: 5000
     protocol: TCP
   selector:
     app: controller
-  
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: controller-ingress
+spec:
+  rules:
+  - host: controller.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: controller-service
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: controller-service
+            port:
+              number: 5000
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: controller-Deployment
+  name: controller-deployment
   labels:
     app: controller
 spec:
@@ -34,12 +57,18 @@ spec:
     metadata:
       labels:
         app: controller
-  containers:
-  - name: controller
-    image: controller
-    ports:
-    - containerPort: 80
-      protocol: TCP
-    - containerPort: 5000
-      protocol: TCP
+    spec:
+      containers:
+      - env:
+        - name: DATABASE_URL
+          value: mongodb://database-service:27017
+        - name: FRONTEND_PORT
+          value: "3000"
+        name: controller
+        image: uplink036/controller
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        - containerPort: 5000
+          protocol: TCP
 ---

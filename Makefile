@@ -9,9 +9,21 @@ up: ## Docker compose up (detach)
 down: ## Docker compose down
 	docker compose down
 
+dockerhub: build
+	docker tag computenet-controller uplink036/controller
+	docker push uplink036/controller
+	docker tag computenet-worker uplink036/worker
+	docker push uplink036/worker
+
 .PHONY: kubernetes
-kubernetes: ## Kubernetes up
-	kubectl apply -f kubernetes/controller.yaml kubernetes/database.yaml kubernetes/worker.yaml 
+kubernetes-up: ## Kubernetes up
+	kubectl apply -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
+
+kubernetes-down: ## Kubernetes down
+	kubectl delete --cascade='foreground' -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
+
+kubectl-status:
+	kubectl get all
 
 .PHONY: help
 help: ## Show this help
