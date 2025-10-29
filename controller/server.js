@@ -3,17 +3,17 @@ const { MongoClient } = require("mongodb");
 const app = express();
 
 let port = 3000;
-if (process.env.FRONTEND_PORT !== "undefined")
+if (process.env.FRONTEND_PORT)
   {port = process.env.FRONTEND_PORT;}
 
 let database_url = "mongodb://database:27017";
-if (process.env.DATABASE_URL !== "undefined")
+if (process.env.DATABASE_URL)
   {database_url = process.env.DATABASE_URL;}
 
 
 let db;
 
-console.log("Attempting to connect to MongoDB at database:27017...");
+console.log("Attempting to connect to MongoDB at", database_url);
 MongoClient.connect(database_url)
   .then((client) => {
     db = client.db("computenet");
