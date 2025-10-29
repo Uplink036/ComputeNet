@@ -20,6 +20,7 @@ def debug_print(message):
 def get_task():
     debug_print("Entering get_task()")
     response = requests.get(f"{CONTROLLER_URL}/api/task")
+    debug_print(f"Got response {response}")
     task = response.json().get("task")
     debug_print(f"Exiting get_task() with task: {task}")
     return task

@@ -3,11 +3,11 @@ kind: Service
 metadata:
   labels:
     app: worker
-  name: worker
+  name: worker-service
 spec:
+  type: ClusterIP
   ports:
-    - name: healthpoint
-      port: 11111
+    - port: 11111
       targetPort: 11111
   selector:
     app: worker
@@ -18,7 +18,7 @@ metadata:
   name: worker-ingress
 spec:
   rules:
-  - host: worker.local
+  - host: worker.test
     http:
       paths:
       - path: /
@@ -48,7 +48,7 @@ spec:
       containers:
         - env:
             - name: CONTROLLER_URL
-              value: http://controller-service:5000
+              value: http://controller-service:3000
             - name: DEBUG
               value: "1"
             - name: PORT
