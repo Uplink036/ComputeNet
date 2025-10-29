@@ -1,42 +1,63 @@
 # ComputeNet
 ## Introduction
-This project is a supposed to be showcase a distributed computing platform that enables users to donate their idle CPU power to collectively solve computational problems. By connecting a network of volunteer clients with a system that distributes workloads and aggregates results.
+This project is a distributed computing platform that enables users to donate their idle CPU power to collectively solve computational problems. By connecting a network of volunteer clients with a system that distributes workloads and aggregates results.
 
 ### File Layout 
-``` File Structure
+```
 ComputeNet/
 ├── controller/
-│   ├── app.js
-│   ├── routes/
-│   ├── controllers/
-│   ├── models/
+│   ├── server.js
+│   ├── server.test.js
+│   ├── package.json
+│   ├── eslint.config.mjs
+│   ├── views/
+│   │   └── index.pug
 │   └── Dockerfile
-├── client/
-│   ├── agent.js
+├── worker/
+│   ├── worker.py
+│   ├── pyproject.toml
 │   └── Dockerfile
-├── docker-compose.yml
+├── kubernetes/
+│   ├── controller.yaml
+│   ├── worker.yaml
+│   └── database.yaml
+├── .github/
+│   └── workflows/
+│       ├── docker-publish.yml
+│       ├── test.yml
+│       └── codeFormat.yml
+├── .devcontainer/
+│   └── devcontainer.json
+├── compose.yaml
+├── Makefile
+├── .prettierrc
+├── .gitignore
 └── README.md
 ```
 
-### Architechutre
+### Architecture
 
-``` Mermaid
+```mermaid
 graph TD
     subgraph Frontend
-        FE[Pure JavaScript UI]
+        FE[Web UI (Using Pug)]
     end
 
-    subgraph Clients (Docker Agents)
-        C1[Client Agent 1<br/>Polls for Tasks]
-        C2[Client Agent 2<br/>Executes Task]
-        C3[Client Agent N<br/>Submits Result]
+    subgraph Controller
+        CTRL[Node.js Server<br/>Express + MongoDB]
     end
 
-    FE -- Submit/View Tasks --> BACKEND
-    C1 -- GET /task --> FE
-    C2 -- Process Task --> C2
-    C2 -- POST /result --> FE
-    C3 -- Repeats loop --> FE
+    subgraph Workers
+        W1[Python Worker 1<br/>Polls for Tasks]
+        W2[Python Worker 2<br/>Executes Task]
+        W3[Python Worker N<br/>Submits Result]
+    end
+
+    FE -- Submit/View Tasks --> CTRL
+    W1 -- GET /task --> CTRL
+    W2 -- Process Task --> W2
+    W2 -- POST /result --> CTRL
+    W3 -- Repeats loop --> CTRL
 ```
 
 ### Database
@@ -52,10 +73,32 @@ graph TD
 | --- | --- |
 | currentTask | GUID|
 
-
 ## How To Run
+
+### Using Docker Compose
+```bash
+docker-compose up
+```
+
+### Development
+1. Install dependencies:
+   ```bash
+   cd controller && npm install
+   cd ../worker && pip install -e .
+   ```
+
+2. Run the controller:
+   ```bash
+   cd controller && npm start
+   ```
+
+3. Run a worker:
+   ```bash
+   cd worker && python worker.py
+   ```
+
 ## LICENSE
 This project uses the [MIT License](./LICENSE)
 
-## Contributures
+## Contributors
 - [Uplink036](https://github.com/Uplink036)
