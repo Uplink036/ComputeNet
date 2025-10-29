@@ -3,13 +3,14 @@ const { MongoClient } = require("mongodb");
 const app = express();
 
 let port = 3000;
-if (process.env.FRONTEND_PORT)
-  {port = process.env.FRONTEND_PORT;}
+if (process.env.FRONTEND_PORT) {
+  port = process.env.FRONTEND_PORT;
+}
 
 let database_url = "mongodb://database:27017";
-if (process.env.DATABASE_URL)
-  {database_url = process.env.DATABASE_URL;}
-
+if (process.env.DATABASE_URL) {
+  database_url = process.env.DATABASE_URL;
+}
 
 let db;
 
@@ -70,7 +71,7 @@ app.get("/api/task", async (req, res) => {
     if (!db) {
       return res.json({ task: null });
     }
-    console.log(res.ip)
+    console.log(res.ip);
 
     console.log("Fetching from database");
     const claimedTask = await claimNextTask();
@@ -123,7 +124,12 @@ app.post("/api/task/submit", async (req, res) => {
     ) {
       return res.json({ success: false });
     }
-    console.log("Task", req.body.task, "submitted with result", req.body.result);
+    console.log(
+      "Task",
+      req.body.task,
+      "submitted with result",
+      req.body.result
+    );
     const result = {
       task: req.body.task,
       result: req.body.result,
