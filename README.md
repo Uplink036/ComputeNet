@@ -38,26 +38,42 @@ ComputeNet/
 ### Architecture
 
 ```mermaid
-graph TD
-    subgraph Frontend
-        FE[Web UI (Using Pug)]
+graph LR
+    subgraph Controllers
+        subgraph Controller1
+            subgraph Frontend1
+                FE1[Web UI]
+            end
+            CTRL1[Node.js]
+        end
+
+        subgraph ControllerN
+            subgraph FrontendN
+                FEN[Web UI]
+            end
+            CTRLN[Node.js]
+        end
     end
 
-    subgraph Controller
-        CTRL[Node.js Server<br/>Express + MongoDB]
+    subgraph Database
+        DB[MongoDB]
     end
 
     subgraph Workers
         W1[Python Worker 1<br/>Polls for Tasks]
-        W2[Python Worker 2<br/>Executes Task]
         W3[Python Worker N<br/>Submits Result]
     end
 
-    FE -- Submit/View Tasks --> CTRL
-    W1 -- GET /task --> CTRL
-    W2 -- Process Task --> W2
-    W2 -- POST /result --> CTRL
-    W3 -- Repeats loop --> CTRL
+    FE1 -- View Tasks --> Controller1
+    FEN -- View Tasks --> ControllerN
+    
+    CTRL1 --> Database
+    CTRLN --> Database
+
+    W1 -- GET task --> Controllers
+    W1 -- Process Task --> W1
+    W1 -- POST result --> Controllers
+    W3 -- Repeats loop --> Controllers
 ```
 
 ### Database
