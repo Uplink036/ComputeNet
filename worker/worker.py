@@ -78,7 +78,7 @@ def main():
                 print(f"Processing task: {task}")
                 result = process_task(task)
                 success = submit_result(task, result)
-                print(f"Submitted result {result}: {'success' if success else 'failed'}")
+                print(f"Submitted {result} got {success} from the server")
             else:
                 print("No task available")
             time.sleep(TIME_BETWEEN_TASKS)
