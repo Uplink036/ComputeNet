@@ -53,7 +53,7 @@ spec:
         - name: FRONTEND_PORT
           value: "3000"
         name: controller
-        image: uplink036/controller
+        image: uplink036/controller:main
         ports:
         - containerPort: 3000
           protocol: TCP

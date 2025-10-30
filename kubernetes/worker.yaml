@@ -55,7 +55,7 @@ spec:
               value: "11111"
             - name: TIME_BETWEEN_TASKS
               value: "1"
-          image: uplink036/worker
+          image: uplink036/worker:main
           name: worker
           ports:
             - containerPort: 11111
