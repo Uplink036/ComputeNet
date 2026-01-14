@@ -17,13 +17,13 @@ dockerhub: build
 
 .PHONY: kubernetes
 kubernetes-up: ## Kubernetes up
-	kubectl apply -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
+	minikube kubectl -- apply -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
 
 kubernetes-down: ## Kubernetes down
-	kubectl delete --cascade='foreground' -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
+	minikube kubectl -- delete --cascade='foreground' -f kubernetes/controller.yaml -f kubernetes/database.yaml -f kubernetes/worker.yaml 
 
 kubectl-status:
-	kubectl get all
+	minikube kubectl -- get all
 
 .PHONY: help
 help: ## Show this help
